@@ -18,12 +18,8 @@ meta_scores= []
 votes = []
 us_gross = []
 
-while True:
-    # get movie divs on current page
-    movie_divs = driver.find_elements(By.CLASS_NAME, 'lister-item-content')
-
-    # collect data
-    for movie in  movie_divs:
+def collect_data(container):
+    for movie in  container:
         titles.append(movie.find_element(By.CSS_SELECTOR, 'h3 a').text)
         genres.append(movie.find_element(By.CLASS_NAME, 'genre').text)
         years.append(movie.find_element(By.CLASS_NAME, 'lister-item-year').text)
@@ -49,7 +45,12 @@ while True:
         gross = nv[4].text if len(nv) == 5 and '#' not in nv[4].text else '-'
         us_gross.append(gross)
 
+while True:
+    # get movie divs on current page
+    movie_divs = driver.find_elements(By.CLASS_NAME, 'lister-item-content')
 
+    # collect data
+    collect_data(movie_divs)
     #Find next
     try:
         next_page_element = driver.find_element(By.CLASS_NAME, 'next-page')
