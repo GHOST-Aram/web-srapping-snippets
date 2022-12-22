@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+import pandas as pd
 
 # Create webdriver
 driver  = webdriver.Chrome()
@@ -44,6 +45,31 @@ def collect_data(container):
 
         gross = nv[4].text if len(nv) == 5 and '#' not in nv[4].text else '-'
         us_gross.append(gross)
+
+#Cleaning data
+def clean_data(dataframe):
+    dataframe['Year'] = dataframe['Year'].str.extract('(\d+)').astype(int)
+    dataframe['Length (Minutes)'] = dataframe['Length (Minutes)'].str.extract('(\d+)').astype(int)
+    dataframe['Metascore'] = pd.to_numeric(dataframe['Metascore'], errors='coerce') 
+    dataframe['votes'] = dataframe['votes'].str.replace(',','').astype(int)
+    dataframe['Gross(Millions)'] = dataframe['Gross(Millions)'].map(lambda gross: gross.lstrip('$').rstrip('M'))
+    dataframe['Gross(Millions)'] = pd.to_numeric(dataframe['Gross(Millions)'], errors='coerce')
+
+# Create data frames
+def create_data_frame():
+    # Data Frames
+    movies = pd.DataFrame({
+    'Movie':titles,
+    'Genre':genres,
+    'Year':years,
+    'Length (Minutes)':time,
+    'Rating':imdb_ratings,
+    'Metascore':meta_scores,
+    'votes':votes,
+    'Gross(Millions)':us_gross 
+    })
+
+    return movies
 
 while True:
     # get movie divs on current page
