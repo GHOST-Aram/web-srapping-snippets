@@ -55,6 +55,8 @@ def clean_data(dataframe):
     dataframe['Gross(Millions)'] = dataframe['Gross(Millions)'].map(lambda gross: gross.lstrip('$').rstrip('M'))
     dataframe['Gross(Millions)'] = pd.to_numeric(dataframe['Gross(Millions)'], errors='coerce')
 
+    return data_frame
+
 # Create data frames
 def create_data_frame():
     # Data Frames
@@ -71,19 +73,24 @@ def create_data_frame():
 
     return movies
 
-while True:
-    # get movie divs on current page
-    movie_divs = driver.find_elements(By.CLASS_NAME, 'lister-item-content')
+def scrap():
+    while True:
+        # get movie divs on current page
+        movie_divs = driver.find_elements(By.CLASS_NAME, 'lister-item-content')
 
-    # collect data
-    collect_data(movie_divs)
-    #Find next
-    try:
-        next_page_element = driver.find_element(By.CLASS_NAME, 'next-page')
-        next_page_element.click()    
-    except:
-        break
+        # collect data
+        collect_data(movie_divs)
+        #Find next
+        try:
+            next_page_element = driver.find_element(By.CLASS_NAME, 'next-page')
+            next_page_element.click()    
+        except:
+            break   
     
     
-
+if __name__ == '__main__':
+    scrap()
+    data_frame = create_data_frame()
+    data_frame = clean_data(data_frame)
+    data_frame.to_csv('movies.csv')
 
