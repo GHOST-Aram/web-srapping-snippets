@@ -45,6 +45,7 @@ for movie in  movie_divs:
 # Data Frames
 movies = pd.DataFrame({
    'Movie':titles,
+   'Genre':genres,
    'Year':years,
    'Length (Minutes)':time,
    'Rating':imdb_ratings,
